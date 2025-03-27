@@ -1,9 +1,8 @@
-const BASE_URL =
-  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net/api";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const createCake = async (cake, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cake`, {
+    const res = await fetch(`${BASE_URL}/api/cake`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -26,7 +25,7 @@ export const createCake = async (cake, jwt) => {
 
 export const updateCake = async (id, cake, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cake/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/cake/${id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -49,7 +48,7 @@ export const updateCake = async (id, cake, jwt) => {
 
 export const deleteCake = async (id, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cake/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/cake/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -70,7 +69,7 @@ export const deleteCake = async (id, jwt) => {
 
 export const getAvailableCakes = async () => {
   try {
-    const res = await fetch(`${BASE_URL}/cake/available`, {
+    const res = await fetch(`${BASE_URL}/api/cake/available`, {
       method: "GET",
     });
     if (!res.ok) {
@@ -87,7 +86,7 @@ export const getAvailableCakes = async () => {
 
 export const getAllCakes = async (jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cake`, {
+    const res = await fetch(`${BASE_URL}/api/cake`, {
       method: "GET",
       headers: { Authorization: `Bearer ${jwt}` },
     });

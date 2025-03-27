@@ -1,9 +1,8 @@
-const BASE_URL =
-  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net/api";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const getCarts = async (jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cart`, {
+    const res = await fetch(`${BASE_URL}/api/cart`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -25,7 +24,7 @@ export const getCarts = async (jwt) => {
 export const createCart = async (cart, jwt) => {
   try {
     console.log("Cart:", cart);
-    const res = await fetch(`${BASE_URL}/cart`, {
+    const res = await fetch(`${BASE_URL}/api/cart`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -47,7 +46,7 @@ export const createCart = async (cart, jwt) => {
 
 export const updateCartQuantity = async (cart, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cart`, {
+    const res = await fetch(`${BASE_URL}/api/cart`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -69,7 +68,7 @@ export const updateCartQuantity = async (cart, jwt) => {
 
 export const deleteCart = async (cartId, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cart/${cartId}`, {
+    const res = await fetch(`${BASE_URL}/api/cart/${cartId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -89,7 +88,7 @@ export const deleteCart = async (cartId, jwt) => {
 
 export const deleteAllCartsByUserId = async (userId, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/cart/clear/${userId}`, {
+    const res = await fetch(`${BASE_URL}/api/cart/clear/${userId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${jwt}`,

@@ -1,10 +1,9 @@
-const BASE_URL =
-  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net/api";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 // User Registration
 export const createUser = async (user) => {
   try {
-    const res = await fetch(`${BASE_URL}/user/register`, {
+    const res = await fetch(`${BASE_URL}/api/user/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +27,7 @@ export const createUser = async (user) => {
 // User Login
 export const login = async (user) => {
   try {
-    const res = await fetch(`${BASE_URL}/user/login`, {
+    const res = await fetch(`${BASE_URL}/api/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +50,7 @@ export const login = async (user) => {
 // Get User By Token
 export const getUserByToken = async (token) => {
   try {
-    const res = await fetch(`${BASE_URL}/user/me`, {
+    const res = await fetch(`${BASE_URL}/api/user/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

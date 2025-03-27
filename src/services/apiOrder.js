@@ -1,9 +1,8 @@
-const BASE_URL =
-  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net/api";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const createOrder = async (order, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/order`, {
+    const res = await fetch(`${BASE_URL}/api/order`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -25,7 +24,7 @@ export const createOrder = async (order, jwt) => {
 
 export const getOrders = async (jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/order`, {
+    const res = await fetch(`${BASE_URL}/api/order`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -46,7 +45,7 @@ export const getOrders = async (jwt) => {
 
 export const deleteOrder = async (id, jwt) => {
   try {
-    const res = await fetch(`${BASE_URL}/order/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/order/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -66,7 +65,7 @@ export const deleteOrder = async (id, jwt) => {
 
 export const updateOrder = async (id, jwt, order) => {
   try {
-    const res = await fetch(`${BASE_URL}/order/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/order/${id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
