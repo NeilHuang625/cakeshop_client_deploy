@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:5056/api";
+const BASE_URL =
+  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net";
 
 export const createCake = async (cake, jwt) => {
   try {
