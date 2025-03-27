@@ -9,6 +9,7 @@ export const createCake = async (cake, jwt) => {
         Authorization: `Bearer ${jwt}`,
       },
       body: cake,
+      credentials: "include",
     });
 
     if (!res.ok) {
