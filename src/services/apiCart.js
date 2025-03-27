@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL =
+  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net";
 
 export const getCarts = async (jwt) => {
   try {

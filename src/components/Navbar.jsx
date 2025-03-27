@@ -19,7 +19,8 @@ import CakeContext from "../contexts/CakeContext";
 import * as signalR from "@microsoft/signalr";
 import MessagePopup from "./MessagePopup";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL =
+  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net";
 console.log("BASE_URL", BASE_URL);
 
 const Navbar = () => {
