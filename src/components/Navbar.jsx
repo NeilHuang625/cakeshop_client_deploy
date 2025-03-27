@@ -20,6 +20,7 @@ import * as signalR from "@microsoft/signalr";
 import MessagePopup from "./MessagePopup";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+console.log("BASE_URL", BASE_URL);
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
