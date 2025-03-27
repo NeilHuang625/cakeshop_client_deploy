@@ -1,5 +1,5 @@
 const BASE_URL =
-  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net";
+  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net/api";
 
 export const createOrder = async (order, jwt) => {
   try {
