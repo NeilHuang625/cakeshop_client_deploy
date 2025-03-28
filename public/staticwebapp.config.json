@@ -1,0 +1,9 @@
+// fixing the problem of Page Not Found after refreshing
+// on Azure Static Web App
+
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/images/*.{png,jpg,gif}", "/css/*", "/js/*"]
+  }
+}
