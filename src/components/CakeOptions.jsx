@@ -103,10 +103,7 @@ const CakeOptions = ({ cake }) => {
     if (result.success) {
       const createdOrder = result.data;
       console.log("Order created:", createdOrder);
-      setOrders((prevOrders) => {
-        console.log("prevOrders", prevOrders);
-        return [...prevOrders, createdOrder];
-      });
+      setOrders((prevOrders) => [...prevOrders, createdOrder]);
       navigate(`/orders/${createdOrder.id}`);
     } else {
       console.error("Error:", result.message);
