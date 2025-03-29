@@ -128,7 +128,7 @@ const Navbar = () => {
   const adminOrders = orders.filter((o) => o.userId === user.id);
 
   return (
-    <nav className="relative mx-auto max-w-7xl px-2 py-1 shadow-md sm:rounded-sm sm:px-4 sm:py-3 md:rounded-lg">
+    <nav className="relative mx-auto max-w-7xl px-4 py-1 shadow-md sm:rounded-sm sm:px-4 sm:py-3 md:rounded-lg">
       <div className="flex h-14 items-center justify-between transition-all duration-300 sm:grid sm:grid-cols-4">
         {/* Logo */}
         <div
