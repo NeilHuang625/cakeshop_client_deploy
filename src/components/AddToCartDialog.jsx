@@ -230,7 +230,7 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
         open={messagePopupOpen}
         setOpen={setMessagePopupOpen}
         message={message}
-        vertical="center"
+        vertical="top"
         horizontal="center"
         buttonLabel="Login"
         buttonAction={() => navigate("/login")}
