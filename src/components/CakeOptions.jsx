@@ -4,6 +4,7 @@ import QuantityInput from "./QuantityInput";
 import MUISelect from "./MUISelect";
 import { RiShoppingCartLine } from "react-icons/ri";
 import { IoBagCheckOutline } from "react-icons/io5";
+import { LuMessageSquareWarning } from "react-icons/lu";
 import CartContext from "../contexts/CartContext";
 import { AuthContext } from "../contexts/AuthProvider";
 import { createCart } from "../services/apiCart";
@@ -12,6 +13,7 @@ import FlyToCartAnimation from "./FlyToCartAnimation";
 import { createOrder } from "../services/apiOrder";
 import { useNavigate } from "react-router-dom";
 import OrderContext from "../contexts/OrderProvider";
+import MessagePopup from "./MessagePopup";
 
 const CakeOptions = ({ cake }) => {
   const [quantity, setQuantity] = useState(1);
@@ -20,6 +22,9 @@ const CakeOptions = ({ cake }) => {
   const { setOrders } = useContext(OrderContext);
   const { user, jwt, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [messagePopupOpen, setMessagePopupOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const { cartIconRef, cakeDetailPageImageRef } = useContext(CartIconContext);
   const [flyingItem, setFlyingItem] = useState(null);
@@ -35,7 +40,8 @@ const CakeOptions = ({ cake }) => {
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      navigate("/login");
+      setMessage("Please login to add to cart");
+      setMessagePopupOpen(true);
       return;
     }
 
@@ -90,7 +96,8 @@ const CakeOptions = ({ cake }) => {
 
   const handleCheckOut = async () => {
     if (!isAuthenticated) {
-      navigate("/login");
+      setMessage("Please login to checkout");
+      setMessagePopupOpen(true);
       return;
     }
 
@@ -171,6 +178,19 @@ const CakeOptions = ({ cake }) => {
 
       {/* flying item */}
       <FlyToCartAnimation flyingItem={flyingItem} />
+
+      {/* Message Popup */}
+      <MessagePopup
+        color="warning"
+        icon={<LuMessageSquareWarning className="h-5 w-5" />}
+        open={messagePopupOpen}
+        setOpen={setMessagePopupOpen}
+        message={message}
+        vertical="center"
+        horizontal="center"
+        buttonLabel="Login"
+        buttonAction={() => navigate("/login")}
+      />
     </div>
   );
 };

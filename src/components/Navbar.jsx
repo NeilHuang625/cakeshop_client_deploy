@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { GiStairsCake } from "react-icons/gi";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import { RiShoppingCartLine } from "react-icons/ri";
 import { MdAccountCircle, MdOutlineAccountCircle } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
@@ -29,13 +30,13 @@ const Navbar = () => {
   const { jwt, isAuthenticated, user, users } = useContext(AuthContext);
   const { cakes } = useContext(CakeContext);
   const [openCartDrawer, setOpenCartDrawer] = useState(false);
-  const [openMessagePopup, setOpenMessagePopup] = useState(false);
   const { orders, setOrders } = useContext(OrderContext);
   const {
     carts,
     isLoading: cartsIsLoading,
     setCarts,
   } = useContext(CartContext);
+  const [openMessagePopup, setOpenMessagePopup] = useState(false);
 
   const navigate = useNavigate();
 
@@ -104,10 +105,9 @@ const Navbar = () => {
       const user = users.find((u) => u.id === newOrder.userId);
       if (user.role === "admin") return;
 
-      setOrders((prevOrders) => [...prevOrders, newOrder]);
       const audio = new Audio("/sounds/newOrderSoundTrack.mp3");
       audio.play().catch((err) => console.log(err));
-
+      setOrders((prevOrders) => [...prevOrders, newOrder]);
       setNewOrderNotification("New Order Comes In!");
       setOpenMessagePopup(true);
     });
@@ -244,11 +244,15 @@ const Navbar = () => {
         cakes={cakes}
       />
       <MessagePopup
+        color="success"
+        icon={<CheckRoundedIcon />}
         open={openMessagePopup}
         setOpen={setOpenMessagePopup}
         message={newOrderNotification}
         vertical="center"
         horizontal="right"
+        buttonLabel="Dismiss"
+        buttonAction={() => setOpenMessagePopup(false)}
       />
     </nav>
   );

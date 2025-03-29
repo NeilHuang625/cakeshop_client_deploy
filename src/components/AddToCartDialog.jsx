@@ -13,12 +13,17 @@ import CartIconContext from "../contexts/CartIconContext";
 import { createOrder } from "../services/apiOrder";
 import OrderContext from "../contexts/OrderProvider";
 import { useNavigate } from "react-router-dom";
+import MessagePopup from "./MessagePopup";
+import { LuMessageSquareWarning } from "react-icons/lu";
 
 const AddToCartDialog = ({ open, handleClose, cake }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedOption, setSelectedOption] = useState(cake.cakeOptions[0]);
   const [selectedImage, setSelectedImage] = useState(cake.cakeImages[0]);
   const [flyingItem, setFlyingItem] = useState(null);
+
+  const [messagePopupOpen, setMessagePopupOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const { user, jwt, isAuthenticated } = useContext(AuthContext);
   const { carts, setCarts } = useContext(CartContext);
@@ -37,7 +42,8 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      navigate("/login");
+      setMessage("Please login to add to cart");
+      setMessagePopupOpen(true);
       return;
     }
 
@@ -92,7 +98,8 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
 
   const handleCheckOut = async () => {
     if (!isAuthenticated) {
-      navigate("/login");
+      setMessage("Please login to checkout");
+      setMessagePopupOpen(true);
       return;
     }
 
@@ -215,6 +222,19 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
         </FormControl>
       </DialogContent>
       <FlyToCartAnimation flyingItem={flyingItem} />
+
+      {/* Message Popup */}
+      <MessagePopup
+        color="warning"
+        icon={<LuMessageSquareWarning className="h-5 w-5" />}
+        open={messagePopupOpen}
+        setOpen={setMessagePopupOpen}
+        message={message}
+        vertical="center"
+        horizontal="center"
+        buttonLabel="Login"
+        buttonAction={() => navigate("/login")}
+      />
     </Dialog>
   );
 };

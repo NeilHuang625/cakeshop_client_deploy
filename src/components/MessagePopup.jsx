@@ -1,6 +1,5 @@
 import Box from "@mui/joy/Box";
 import Snackbar from "@mui/joy/Snackbar";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 
@@ -10,6 +9,10 @@ export default function MessagePopup({
   message,
   vertical,
   horizontal,
+  icon,
+  color,
+  buttonLabel,
+  buttonAction,
 }) {
   const handleClose = () => setOpen(false);
 
@@ -19,17 +22,12 @@ export default function MessagePopup({
         anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
         open={open}
         variant="soft"
-        color="success"
+        color={color}
         onClose={handleClose}
-        startDecorator={<CheckRoundedIcon />}
+        startDecorator={icon}
         endDecorator={
-          <Button
-            onClick={handleClose}
-            size="sm"
-            variant="soft"
-            color="success"
-          >
-            Dismiss
+          <Button onClick={buttonAction} size="sm" variant="soft" color={color}>
+            {buttonLabel}
           </Button>
         }
       >
@@ -45,4 +43,8 @@ MessagePopup.propTypes = {
   message: PropTypes.string,
   vertical: PropTypes.string,
   horizontal: PropTypes.string,
+  icon: PropTypes.element,
+  color: PropTypes.string,
+  buttonLabel: PropTypes.string,
+  buttonAction: PropTypes.func,
 };
