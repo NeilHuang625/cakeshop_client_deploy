@@ -3,7 +3,7 @@ import { GiStairsCake } from "react-icons/gi";
 import { RiShoppingCartLine } from "react-icons/ri";
 import { MdAccountCircle, MdOutlineAccountCircle } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import ResponsiveMenu from "./ResponsiveMenu";
 import ResponsiveNav from "./ResponsiveNav";
@@ -21,13 +21,12 @@ import MessagePopup from "./MessagePopup";
 
 const BASE_URL =
   "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net";
-console.log("BASE_URL", BASE_URL);
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [newOrderNotification, setNewOrderNotification] = useState("");
-  const { jwt, isAuthenticated, user } = useContext(AuthContext);
+  const { jwt, isAuthenticated, user, users } = useContext(AuthContext);
   const { cakes } = useContext(CakeContext);
   const [openCartDrawer, setOpenCartDrawer] = useState(false);
   const [openMessagePopup, setOpenMessagePopup] = useState(false);
@@ -37,6 +36,8 @@ const Navbar = () => {
     isLoading: cartsIsLoading,
     setCarts,
   } = useContext(CartContext);
+
+  const navigate = useNavigate();
 
   const { cartIconRef } = useContext(CartIconContext);
 
@@ -98,7 +99,12 @@ const Navbar = () => {
       })
       .catch((err) => console.log(err));
 
-    connection.on("NewOrder", () => {
+    connection.on("NewOrder", (newOrder) => {
+      // Check if the new order is from admin or user
+      const user = users.find((u) => u.id === newOrder.userId);
+      if (user.role === "admin") return;
+
+      setOrders((prevOrders) => [...prevOrders, newOrder]);
       const audio = new Audio("/sounds/newOrderSoundTrack.mp3");
       audio.play().catch((err) => console.log(err));
 
@@ -107,7 +113,7 @@ const Navbar = () => {
     });
 
     return () => connection.stop();
-  }, [isAuthenticated, user, jwt, setOrders]);
+  }, [isAuthenticated, user, jwt, setOrders, users]);
 
   const toggleDrawer = (newOpen) => () => setOpenCartDrawer(newOpen);
 
@@ -123,11 +129,14 @@ const Navbar = () => {
 
   return (
     <nav className="relative mx-auto max-w-7xl px-2 py-1 shadow-md sm:rounded-sm sm:px-4 sm:py-3 md:rounded-lg">
-      <div className="flex justify-between transition-all duration-300 sm:grid sm:grid-cols-4 sm:items-center">
+      <div className="flex h-14 items-center justify-between transition-all duration-300 sm:grid sm:grid-cols-4">
         {/* Logo */}
-        <div className="col-span-1 flex items-center gap-2 text-2xl font-bold uppercase">
+        <div
+          onClick={() => navigate("/")}
+          className="col-span-1 flex items-center gap-2 text-2xl font-bold uppercase transition-all duration-200 hover:scale-103 hover:cursor-pointer"
+        >
           <GiStairsCake />
-          <p>Cake</p>
+          <p>Okey Cake</p>
         </div>
 
         {/* Menu */}

@@ -31,7 +31,7 @@ const ProductCard = ({ cake, view }) => {
       </div>
       <div className={`p-3 ${view === "list" ? "w-4/5" : ""}`}>
         <h3
-          className={`${view === "list" ? "" : "line-clamp-2 min-h-[3.5rem]"} text-sm font-semibold text-gray-900 hover:text-blue-500 sm:text-lg`}
+          className={`${view === "list" ? "" : "line-clamp-2 min-h-[3.5rem]"} text-sm font-semibold text-gray-900 hover:text-amber-500 sm:text-lg`}
         >
           {cake.cakeName}
         </h3>

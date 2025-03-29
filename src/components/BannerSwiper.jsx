@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/pagination";
-import "../styles.css";
+import "./BannerSwiper.css";
 import { Autoplay, Pagination } from "swiper/modules";
 
 const bannerImages = [
@@ -26,6 +26,7 @@ const BannerSwiper = () => {
         disableOnInteraction: false,
       }}
       loop
+      className="banner-swiper"
     >
       {bannerImages.map((image, index) => (
         <SwiperSlide key={index}>

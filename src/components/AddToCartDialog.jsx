@@ -20,7 +20,7 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
   const [selectedImage, setSelectedImage] = useState(cake.cakeImages[0]);
   const [flyingItem, setFlyingItem] = useState(null);
 
-  const { user, jwt } = useContext(AuthContext);
+  const { user, jwt, isAuthenticated } = useContext(AuthContext);
   const { carts, setCarts } = useContext(CartContext);
   const { cartIconRef, addToCartDialogImageRef } = useContext(CartIconContext);
   const { setOrders } = useContext(OrderContext);
@@ -36,6 +36,11 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
   };
 
   const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     const cart = {
       cakeId: cake.id,
       quantity,
@@ -86,6 +91,11 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
   };
 
   const handleCheckOut = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     const newOrder = {
       userId: user.id,
       orderItems: [
@@ -118,6 +128,13 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
       fullWidth
       maxWidth="md"
       onClick={(e) => e.stopPropagation()}
+      sx={{
+        "& .MuiDialog-paper": {
+          borderRadius: "0.9rem",
+          maxHeight: "90vh",
+          "@media (max-width: 640px)": { maxHeight: "80vh" },
+        },
+      }}
     >
       <DialogContent>
         <FormControl fullWidth margin="normal">

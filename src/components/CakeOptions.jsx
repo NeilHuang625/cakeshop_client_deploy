@@ -18,7 +18,7 @@ const CakeOptions = ({ cake }) => {
   const [selectedOption, setSelectedOption] = useState(cake.cakeOptions[0]);
   const { carts, setCarts } = useContext(CartContext);
   const { setOrders } = useContext(OrderContext);
-  const { user, jwt } = useContext(AuthContext);
+  const { user, jwt, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const { cartIconRef, cakeDetailPageImageRef } = useContext(CartIconContext);
@@ -34,6 +34,11 @@ const CakeOptions = ({ cake }) => {
   };
 
   const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     const cart = {
       cakeId: cake.id,
       cakeImage: cake.cakeImages[0],
@@ -84,6 +89,11 @@ const CakeOptions = ({ cake }) => {
   };
 
   const handleCheckOut = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     const newOrder = {
       userId: user.id,
       orderItems: [
@@ -103,7 +113,10 @@ const CakeOptions = ({ cake }) => {
     if (result.success) {
       const createdOrder = result.data;
       console.log("Order created:", createdOrder);
-      setOrders((prevOrders) => [...prevOrders, createdOrder]);
+      setOrders((prevOrders) => {
+        console.log("prevOrders", prevOrders);
+        return [...prevOrders, createdOrder];
+      });
       navigate(`/orders/${createdOrder.id}`);
     } else {
       console.error("Error:", result.message);

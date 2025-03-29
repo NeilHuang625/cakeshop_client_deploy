@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import "../styles.css";
+import "./CakeSwiper.css";
 import { Navigation } from "swiper/modules";
 import { useContext } from "react";
 import CakeContext from "../contexts/CakeContext";
@@ -24,12 +24,12 @@ const CakeSwiper = ({ children }) => {
       </div>
       <Swiper
         slidesPerView={1}
-        spaceBetween={25}
+        spaceBetween={58}
         modules={[Navigation]}
         breakpoints={{
-          480: {
+          580: {
             slidesPerView: 2,
-            spaceBetween: 30,
+            spaceBetween: 58,
           },
           768: {
             slidesPerView: 3,
@@ -41,28 +41,24 @@ const CakeSwiper = ({ children }) => {
           },
         }}
         navigation
-        className="mySwiper custom-swiper-height mt-7 bg-gray-100"
+        className="cake-swiper"
       >
         {cakes.map((cake) => (
-          <SwiperSlide key={cake.id}>
-            <div className="overflow-hidden rounded-lg">
-              <img
-                src={cake.cakeImages[0]}
-                alt={cake.cakeName}
-                className="h-full w-full object-cover object-center"
-              />
-              <div className="flex flex-col justify-center gap-1 p-4">
-                <p className="text-sm font-bold text-gray-700">
+          <SwiperSlide
+            key={cake.id}
+            className="hover:cursor-pointer hover:shadow-lg"
+          >
+            <div onClick={() => navigate(`/cakes/${cake.id}`)}>
+              <img src={cake.cakeImages[0]} alt={cake.cakeName} />
+              <div className="flex flex-col justify-center gap-1 px-8 pt-4 pb-8 sm:p-4">
+                <p className="cake-name font-bold text-gray-700">
                   {cake.cakeName}
                 </p>
                 <p className="font-bold text-gray-700">
                   ${cake.cakeOptions[0].price}
                 </p>
 
-                <button
-                  onClick={() => navigate(`/cakes/${cake.id}`)}
-                  className="flex items-center justify-center gap-1 rounded-lg bg-amber-500 px-4 py-2 text-sm text-white transition-all duration-200 hover:cursor-pointer hover:bg-amber-600"
-                >
+                <button className="flex items-center justify-center gap-1 rounded-lg bg-amber-500 px-4 py-2 text-sm text-white transition-all duration-200 hover:cursor-pointer hover:bg-amber-600">
                   <IoBagCheckOutline className="h-4.5 w-4.5" />
                   Add to Cart
                 </button>
