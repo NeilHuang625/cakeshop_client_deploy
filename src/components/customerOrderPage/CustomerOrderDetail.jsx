@@ -20,11 +20,15 @@ const CustomerOrderDetail = () => {
   const order = orders.find((o) => o.id === selectedOrderId);
 
   const [open, setOpen] = useState(false);
-  const [paymentChecked, setPaymentChecked] = useState(order.paymentStatus);
+  const [paymentChecked, setPaymentChecked] = useState(order?.paymentStatus);
   const [statusChecked, setStatusChecked] = useState(
-    order.orderStatus === "Confirmed" || order.orderStatus === "Completed",
+    order?.orderStatus === "Confirmed" || order?.orderStatus === "Completed",
   );
   const navigate = useNavigate();
+
+  if (!order) {
+    return <p>Order not found or was cancelled by customer!</p>;
+  }
 
   const isCompleted = order.orderStatus === "Completed";
 
