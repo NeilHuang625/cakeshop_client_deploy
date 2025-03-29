@@ -26,7 +26,12 @@ export default function MessagePopup({
         onClose={handleClose}
         startDecorator={icon}
         endDecorator={
-          <Button onClick={buttonAction} size="sm" variant="soft" color={color}>
+          <Button
+            onClick={buttonAction}
+            size="sm"
+            variant="outlined"
+            color={color}
+          >
             {buttonLabel}
           </Button>
         }
