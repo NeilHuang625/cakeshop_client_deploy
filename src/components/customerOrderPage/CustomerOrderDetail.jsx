@@ -15,9 +15,10 @@ const CustomerOrderDetail = () => {
   const { selectedOrderId } = useParams();
   const { cakes } = useContext(CakeContext);
   const { orders, setOrders } = useContext(OrderContext);
-  const { jwt } = useContext(AuthContext);
+  const { jwt, users } = useContext(AuthContext);
 
   const order = orders.find((o) => o.id === selectedOrderId);
+  const user = users.find((u) => u.id === order?.userId);
 
   const [open, setOpen] = useState(false);
   const [paymentChecked, setPaymentChecked] = useState(order?.paymentStatus);
@@ -122,6 +123,15 @@ const CustomerOrderDetail = () => {
       <p className="inline-block rounded-full bg-white py-2 text-xl text-amber-500">
         Order#: {order.id}
       </p>
+
+      <div className="w-1/2 rounded-lg border border-gray-200 bg-gray-100 text-gray-500">
+        <p className="font-semibold">Customer Details</p>
+        <div className="gap-2 space-y-1 px-4 py-2 text-sm">
+          <p>Name: {user.username}</p>
+          <p>Email: {user.email}</p>
+          <p>Phone: {user.phoneNumber}</p>
+        </div>
+      </div>
       <Divider className="py-2" />
       <p className="py-4 font-semibold text-gray-500">Order Items:</p>
       <div className="rounded-lg border border-dashed border-amber-500 px-4 py-2">

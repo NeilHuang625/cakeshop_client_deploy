@@ -171,11 +171,10 @@ export default function CustomerOrder() {
               </Typography>
             </Box>
             {rows.length === 0 ? (
-                    <Typography level="body-md" sx={{ textAlign: "center", mt: 4 }}>
-                      No orders found
-                    </Typography>
-            ):
-            selectedOrderId ? (
+              <Typography level="body-md" sx={{ textAlign: "center", mt: 4 }}>
+                No orders found
+              </Typography>
+            ) : selectedOrderId ? (
               <CustomerOrderDetail selectedOrderId={selectedOrderId} />
             ) : (
               <>
