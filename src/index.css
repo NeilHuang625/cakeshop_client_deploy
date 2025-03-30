@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
 @layer components {
   .loader {
     width: 120px;
