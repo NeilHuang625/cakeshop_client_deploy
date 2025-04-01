@@ -112,7 +112,7 @@ const Orders = () => {
           </Table>
 
           <div className="flex flex-col gap-5 px-4 md:hidden">
-            {orders.map((order) => (
+            {ordersToShow.map((order) => (
               <div
                 key={order.id}
                 className="rounded-lg bg-gray-100 px-4 py-3 text-gray-700 shadow-md"
