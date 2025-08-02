@@ -3,7 +3,7 @@ const BASE_URL =
 
 export const getAllCategories = async () => {
   try {
-    const res = await fetch(`${BASE_URL}/category`, {
+    const res = await fetch(`${BASE_URL}/api/category`, {
       method: "GET",
     });
 
