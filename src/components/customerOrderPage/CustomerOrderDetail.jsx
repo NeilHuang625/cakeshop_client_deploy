@@ -98,6 +98,7 @@ const CustomerOrderDetail = () => {
   const handleDoneClick = async () => {
     const newOrder = {
       ...order,
+      paymentStatus: true,
       orderStatus: "Completed",
     };
     const result = await updateOrder(order.id, jwt, newOrder);
@@ -108,11 +109,15 @@ const CustomerOrderDetail = () => {
           o.id === order.id
             ? {
                 ...o,
+                paymentStatus: true,
                 orderStatus: "Completed",
               }
             : o,
         ),
       );
+      // Update local state to reflect the changes
+      setPaymentChecked(true);
+      setStatusChecked(true);
     } else {
       console.log(result.message);
     }

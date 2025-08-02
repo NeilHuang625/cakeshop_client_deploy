@@ -18,6 +18,7 @@ import { IoMdAdd } from "react-icons/io";
 import { TbDatabaseEdit } from "react-icons/tb";
 import { MdManageAccounts } from "react-icons/md";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { IoStatsChart } from "react-icons/io5";
 import OrderContext from "../contexts/OrderProvider";
 import { useMediaQuery } from "@mui/system";
 
@@ -60,6 +61,11 @@ const adminMenuItems = [
     label: "Customer Orders",
     icon: <RiMoneyDollarCircleLine className="h-5 w-5" />,
     linkTo: "/customer-orders",
+  },
+  {
+    label: "Sales Statistics",
+    icon: <IoStatsChart className="h-5 w-5" />,
+    linkTo: "/sales-statistics",
   },
   {
     label: "Manage User",

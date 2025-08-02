@@ -4,11 +4,12 @@ import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
+import Button from "@mui/joy/Button";
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-
-import Sidebar from "../components/customerOrderPage/Sidebar";
+import HistoryIcon from "@mui/icons-material/History";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import OrderTable from "../components/customerOrderPage/OrderTable";
 import OrderList from "../components/customerOrderPage/OrderList";
 import CustomerOrderDetail from "../components/customerOrderPage/CustomerOrderDetail";
@@ -26,17 +27,25 @@ export default function CustomerOrder() {
   const [order, setOrder] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 10;
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [orderStatusFilter, setOrderStatusFilter] = useState("");
   const [paymentStatusFilter, setPaymentStatusFilter] = useState("");
   const [customerFilter, setCustomerFilter] = useState("");
 
-  const usersWithOrders = users.filter((user) =>
-    orders.some((order) => order.userId === user.id),
+  // Filter orders based on completion status and current view
+  const filteredOrdersByStatus = orders.filter((order) => 
+    showOrderHistory 
+      ? order.orderStatus === "Completed"
+      : order.orderStatus !== "Completed"
   );
 
-  const rows = orders.map((order) => {
+  const usersWithOrders = users.filter((user) =>
+    filteredOrdersByStatus.some((order) => order.userId === user.id),
+  );
+
+  const rows = filteredOrdersByStatus.map((order) => {
     return {
       id: order.id,
       date: new Date(order.createdDate).toLocaleString("en-NZ", {
@@ -97,12 +106,13 @@ export default function CustomerOrder() {
   // Calculate total pages
   const totalPages = Math.ceil(filteredRows.length / ordersPerPage);
 
+  const currentPageTitle = showOrderHistory ? "Order History" : "Orders";
+
   return (
     <div className="mx-auto mt-1 mb-15 max-w-7xl">
       <CssVarsProvider disableTransitionOnChange>
         <CssBaseline />
         <Box sx={{ display: "flex", minHeight: "100dvh" }}>
-          <Sidebar />
           <Box
             component="main"
             className="MainContent"
@@ -144,14 +154,14 @@ export default function CustomerOrder() {
                     href="/customer-orders"
                     aria-label="Orders"
                   >
-                    Orders
+                    {currentPageTitle}
                   </Link>
                 )}
                 <Typography
                   color="primary"
                   sx={{ fontWeight: 500, fontSize: 12 }}
                 >
-                  {selectedOrderId ? "Order Details" : "Orders"}
+                  {selectedOrderId ? "Order Details" : currentPageTitle}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -167,12 +177,24 @@ export default function CustomerOrder() {
               }}
             >
               <Typography level="h2" component="h1">
-                {selectedOrderId ? "Order Details" : "Orders"}
+                {selectedOrderId ? "Order Details" : currentPageTitle}
               </Typography>
+              {!selectedOrderId && (
+                <Button
+                  variant="outlined"
+                  startDecorator={showOrderHistory ? <ListAltIcon /> : <HistoryIcon />}
+                  onClick={() => {
+                    setShowOrderHistory(!showOrderHistory);
+                    setCurrentPage(1); // Reset to first page when switching views
+                  }}
+                >
+                  {showOrderHistory ? "Active Orders" : "Order History"}
+                </Button>
+              )}
             </Box>
             {rows.length === 0 ? (
               <Typography level="body-md" sx={{ textAlign: "center", mt: 4 }}>
-                No orders found
+                {showOrderHistory ? "No completed orders found" : "No active orders found"}
               </Typography>
             ) : selectedOrderId ? (
               <CustomerOrderDetail selectedOrderId={selectedOrderId} />

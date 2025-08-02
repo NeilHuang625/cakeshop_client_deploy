@@ -9,9 +9,12 @@ import PropTypes from "prop-types";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-const CakeSwiper = ({ children }) => {
+const CakeSwiper = ({ children, categoryId }) => {
   const { cakes } = useContext(CakeContext);
   const navigate = useNavigate();
+
+  // Filter cakes by categoryId
+  const filteredCakes = cakes.filter(cake => cake.categoryId === categoryId);
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100 pb-10 sm:p-8">
@@ -43,7 +46,7 @@ const CakeSwiper = ({ children }) => {
         navigation
         className="cake-swiper"
       >
-        {cakes.map((cake) => (
+        {filteredCakes.map((cake) => (
           <SwiperSlide
             key={cake.id}
             className="hover:cursor-pointer hover:shadow-lg"
@@ -73,6 +76,7 @@ const CakeSwiper = ({ children }) => {
 
 CakeSwiper.propTypes = {
   children: PropTypes.string,
+  categoryId: PropTypes.string.isRequired,
 };
 
 export default CakeSwiper;
