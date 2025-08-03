@@ -10,8 +10,6 @@ import { AuthContext } from "../contexts/AuthProvider";
 import CartContext from "../contexts/CartContext";
 import FlyToCartAnimation from "./FlyToCartAnimation";
 import CartIconContext from "../contexts/CartIconContext";
-import { createOrder } from "../services/apiOrder";
-import OrderContext from "../contexts/OrderProvider";
 import { useNavigate } from "react-router-dom";
 import MessagePopup from "./MessagePopup";
 import { LuMessageSquareWarning } from "react-icons/lu";
@@ -28,7 +26,6 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
   const { user, jwt, isAuthenticated } = useContext(AuthContext);
   const { carts, setCarts } = useContext(CartContext);
   const { cartIconRef, addToCartDialogImageRef } = useContext(CartIconContext);
-  const { setOrders } = useContext(OrderContext);
   const navigate = useNavigate();
 
   const handleOptionChange = (event, value) => {
@@ -103,29 +100,22 @@ const AddToCartDialog = ({ open, handleClose, cake }) => {
       return;
     }
 
-    const newOrder = {
+    const orderData = {
       userId: user.id,
       orderItems: [
         {
           cakeId: cake.id,
-          quantity,
-          cakeImage: cake.cakeImages[0],
           cakeName: cake.cakeName,
+          cakeImage: cake.cakeImages[0],
           cakePrice: selectedOption.price,
-          optionId: selectedOption.id,
           cakeSize: selectedOption.name,
+          optionId: selectedOption.id,
+          quantity,
         },
       ],
     };
 
-    const result = await createOrder(newOrder, jwt);
-    if (result.success) {
-      const newOrder = result.data;
-      setOrders((prevOrders) => [...prevOrders, newOrder]);
-      navigate(`/orders/${newOrder.id}`);
-    } else {
-      console.error("Error:", result.message);
-    }
+    navigate("/checkout", { state: { orderData } });
   };
 
   return (
