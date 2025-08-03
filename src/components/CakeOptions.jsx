@@ -11,14 +11,12 @@ import { createCart } from "../services/apiCart";
 import CartIconContext from "../contexts/CartIconContext";
 import FlyToCartAnimation from "./FlyToCartAnimation";
 import { useNavigate } from "react-router-dom";
-import OrderContext from "../contexts/OrderProvider";
 import MessagePopup from "./MessagePopup";
 
 const CakeOptions = ({ cake }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedOption, setSelectedOption] = useState(cake.cakeOptions[0]);
   const { carts, setCarts } = useContext(CartContext);
-  const { setOrders } = useContext(OrderContext);
   const { user, jwt, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
