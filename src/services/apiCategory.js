@@ -1,5 +1,4 @@
-const BASE_URL =
-  "https://cakeshop-ewfffsajfrasd6db.newzealandnorth-01.azurewebsites.net";
+import { BASE_URL } from '../config/env.js';
 
 export const getAllCategories = async () => {
   try {
