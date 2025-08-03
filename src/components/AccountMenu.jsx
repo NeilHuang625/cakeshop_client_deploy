@@ -87,11 +87,15 @@ const AccountMenu = ({
   const { setOrders } = useContext(OrderContext);
   const navigate = useNavigate();
 
+  const isAdmin = user?.role === "admin";
+
   let menuItems = isAuthenticated
     ? [...authenticatedMenuItems]
     : unauthenticatedMenuItems;
 
-  if (isAuthenticated && user.role === "admin") {
+  // Remove "Orders" option for admin users
+  if (isAuthenticated && isAdmin) {
+    menuItems = menuItems.filter(item => item.label !== "Orders");
     menuItems = [...adminMenuItems, ...menuItems];
   }
 
@@ -106,8 +110,8 @@ const AccountMenu = ({
   };
 
   const isSmallScreen = useMediaQuery("(max-width:640px)");
-  const isAdmin = user?.role === "admin";
   const adminOrders = orders.filter((o) => o.userId === user.id);
+  const activeOrders = orders.filter((o) => o.orderStatus !== "Completed");
 
   return (
     <Menu
@@ -200,7 +204,7 @@ const AccountMenu = ({
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <Typography>{item.label}</Typography>
-            {orders.length > 0 && (
+            {activeOrders.length > 0 && (
               <Box
                 sx={{
                   ml: "auto",
@@ -215,7 +219,7 @@ const AccountMenu = ({
                   fontSize: "0.75rem",
                 }}
               >
-                {orders.length}
+                {activeOrders.length}
               </Box>
             )}
           </MenuItem>
