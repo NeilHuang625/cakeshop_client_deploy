@@ -22,6 +22,7 @@ import OrderDetail from "./pages/OrderDetail";
 import CustomerOrder from "./pages/CustomerOrder";
 import { CategoryProvider } from "./contexts/CategoryContext";
 import SalesStatistics from "./components/SalesStatistics";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const App = () => {
   return (
@@ -104,6 +105,7 @@ const App = () => {
                           </PrivateRoute>
                         }
                       />
+                      <Route path="/checkout" element={<CheckoutPage />} />
                       <Route path="/unauthorized" element={<Unauthorized />} />
                       <Route path="*" element={<PageNotFound />} />
                     </Route>

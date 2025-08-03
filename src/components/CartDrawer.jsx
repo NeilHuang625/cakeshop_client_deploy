@@ -9,24 +9,18 @@ import { RiShoppingCartLine } from "react-icons/ri";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { createOrder } from "../services/apiOrder";
-import { useContext, useState } from "react";
-import OrderContext from "../contexts/OrderProvider";
-import { deleteAllCartsByUserId } from "../services/apiCart";
 import { useNavigate } from "react-router-dom";
 import { isCakeAvailable } from "../utils";
 import MUIPopup from "./MUIPopup";
+import { useState } from "react";
 
 export default function CartDrawer({
   open,
   toggleDrawer,
   carts,
-  setCarts,
-  jwt,
   cakes,
   user,
 }) {
-  const { setOrders } = useContext(OrderContext);
   const navigate = useNavigate();
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -41,39 +35,13 @@ export default function CartDrawer({
     if (
       carts.some((cart) => isCakeAvailable(user.role, cakes, cart) === false)
     ) {
-      // alert("There are unavailable cakes in your cart. Please remove them.");
       setOpenPopup(true);
       return;
     }
 
-    const newOrder = {
-      userId: carts[0].userId,
-      orderItems: carts.map((cart) => ({
-        cakeId: cart.cakeId,
-        cakeName: cart.cakeName,
-        cakeImage: cart.cakeImage,
-        cakePrice: cart.cakePrice,
-        cakeSize: cart.cakeSize,
-        optionId: cart.optionId,
-        quantity: cart.quantity,
-      })),
-    };
-
-    const result = await createOrder(newOrder, jwt);
-    if (result.success) {
-      const newOrder = result.data;
-      setOrders((prevOrders) => [...prevOrders, newOrder]);
-      const res = await deleteAllCartsByUserId(carts[0].userId, jwt);
-      if (res.success) {
-        setCarts([]);
-        navigate(`/orders/${newOrder.id}`);
-        toggleDrawer(false)();
-      } else {
-        console.log(res);
-      }
-    } else {
-      console.log(result);
-    }
+    // Navigate to checkout page instead of directly creating order
+    navigate("/checkout");
+    toggleDrawer(false)();
   };
 
   const DrawerList = (
