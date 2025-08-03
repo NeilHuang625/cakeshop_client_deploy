@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -24,6 +24,22 @@ export default function CheckoutPage() {
   const { setOrders } = useContext(OrderContext);
   const { jwt, user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if we have single product data from navigation state
+  const singleProductData = location.state?.orderData;
+  const isFromSingleProduct = !!singleProductData;
+
+  // Use single product data or cart items
+  const orderItems = isFromSingleProduct ? singleProductData.orderItems : carts.map((cart) => ({
+    cakeId: cart.cakeId,
+    cakeName: cart.cakeName,
+    cakeImage: cart.cakeImage,
+    cakePrice: cart.cakePrice,
+    cakeSize: cart.cakeSize,
+    optionId: cart.optionId,
+    quantity: cart.quantity,
+  }));
 
   const [deliveryInfo, setDeliveryInfo] = useState({
     deliveryDate: "",
@@ -39,8 +55,8 @@ export default function CheckoutPage() {
   const [popupMessage, setPopupMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalPrice = carts.reduce(
-    (acc, cart) => acc + cart.quantity * cart.cakePrice,
+  const totalPrice = orderItems.reduce(
+    (acc, item) => acc + item.quantity * item.cakePrice,
     0,
   );
 
@@ -73,15 +89,7 @@ export default function CheckoutPage() {
     try {
       const newOrder = {
         userId: user.id,
-        orderItems: carts.map((cart) => ({
-          cakeId: cart.cakeId,
-          cakeName: cart.cakeName,
-          cakeImage: cart.cakeImage,
-          cakePrice: cart.cakePrice,
-          cakeSize: cart.cakeSize,
-          optionId: cart.optionId,
-          quantity: cart.quantity,
-        })),
+        orderItems: orderItems,
         deliveryInfo: {
           deliveryDate: deliveryInfo.deliveryDate,
           deliveryTime: deliveryInfo.deliveryTime,
@@ -99,13 +107,17 @@ export default function CheckoutPage() {
         const createdOrder = result.data;
         setOrders((prevOrders) => [...prevOrders, createdOrder]);
         
-        const res = await deleteAllCartsByUserId(user.id, jwt);
-        if (res.success) {
-          setCarts([]);
-          navigate(`/orders/${createdOrder.id}`);
-        } else {
-          console.log(res);
+        // Only clear cart if checkout was from cart, not from single product
+        if (!isFromSingleProduct) {
+          const res = await deleteAllCartsByUserId(user.id, jwt);
+          if (res.success) {
+            setCarts([]);
+          } else {
+            console.log(res);
+          }
         }
+        
+        navigate(`/orders/${createdOrder.id}`);
       } else {
         setPopupMessage("Failed to create order. Please try again.");
         setOpenPopup(true);
@@ -119,10 +131,10 @@ export default function CheckoutPage() {
     }
   };
 
-  if (carts.length === 0) {
+  if (orderItems.length === 0) {
     return (
       <Box sx={{ p: 4, textAlign: "center" }}>
-        <Typography variant="h5">Your cart is empty</Typography>
+        <Typography variant="h5">No items to checkout</Typography>
         <Button 
           variant="contained" 
           onClick={() => navigate("/cakes")}
@@ -147,23 +159,23 @@ export default function CheckoutPage() {
               </Typography>
             </Box>
             
-            {carts.map((cart) => (
-              <Box key={cart.id} sx={{ mb: 2, pb: 2, borderBottom: "1px solid #eee" }}>
+            {orderItems.map((item, index) => (
+              <Box key={isFromSingleProduct ? index : item.id} sx={{ mb: 2, pb: 2, borderBottom: "1px solid #eee" }}>
                 <Box sx={{ display: "flex", gap: 2 }}>
                   <img 
-                    src={cart.cakeImage} 
-                    alt={cart.cakeName}
+                    src={item.cakeImage} 
+                    alt={item.cakeName}
                     style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 4 }}
                   />
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                      {cart.cakeName}
+                      {item.cakeName}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Size: {cart.cakeSize} | Quantity: {cart.quantity}
+                      Size: {item.cakeSize} | Quantity: {item.quantity}
                     </Typography>
                     <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                      NZ$ {(cart.quantity * cart.cakePrice).toFixed(2)}
+                      NZ$ {(item.quantity * item.cakePrice).toFixed(2)}
                     </Typography>
                   </Box>
                 </Box>

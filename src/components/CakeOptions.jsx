@@ -10,7 +10,6 @@ import { AuthContext } from "../contexts/AuthProvider";
 import { createCart } from "../services/apiCart";
 import CartIconContext from "../contexts/CartIconContext";
 import FlyToCartAnimation from "./FlyToCartAnimation";
-import { createOrder } from "../services/apiOrder";
 import { useNavigate } from "react-router-dom";
 import OrderContext from "../contexts/OrderProvider";
 import MessagePopup from "./MessagePopup";
@@ -101,7 +100,7 @@ const CakeOptions = ({ cake }) => {
       return;
     }
 
-    const newOrder = {
+    const orderData = {
       userId: user.id,
       orderItems: [
         {
@@ -116,18 +115,7 @@ const CakeOptions = ({ cake }) => {
       ],
     };
 
-    const result = await createOrder(newOrder, jwt);
-    if (result.success) {
-      const createdOrder = result.data;
-      console.log("Order created:", createdOrder);
-      setOrders((prevOrders) => {
-        console.log("prevOrders", prevOrders);
-        return [...prevOrders, createdOrder];
-      });
-      navigate(`/orders/${createdOrder.id}`);
-    } else {
-      console.error("Error:", result.message);
-    }
+    navigate("/checkout", { state: { orderData } });
   };
 
   return (
