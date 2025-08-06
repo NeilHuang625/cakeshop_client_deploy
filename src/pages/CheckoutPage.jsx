@@ -60,10 +60,13 @@ export default function CheckoutPage() {
   const [popupMessage, setPopupMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalPrice = orderItems.reduce(
+  const subtotal = orderItems.reduce(
     (acc, item) => acc + item.quantity * item.cakePrice,
     0,
   );
+
+  const deliveryFee = subtotal < 100 ? 10 : 0;
+  const totalPrice = subtotal + deliveryFee;
 
   // Get minimum date (24 hours from now)
   const getMinimumDate = () => {
@@ -213,11 +216,9 @@ export default function CheckoutPage() {
         {/* Order Details - Left Side */}
         <Grid2 size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 3 }}>
-            <Box sx={{ display: "flex", mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                NZ$ {totalPrice.toFixed(2)}
-              </Typography>
-            </Box>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+              Order Summary
+            </Typography>
             
             {orderItems.map((item, index) => (
               <Box key={isFromSingleProduct ? index : item.id} sx={{ mb: 2, pb: 2, borderBottom: "1px solid #eee" }}>
@@ -242,8 +243,28 @@ export default function CheckoutPage() {
               </Box>
             ))}
 
+            {/* Price Breakdown */}
+            <Box sx={{ borderTop: "1px solid #eee", pt: 2 }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+                <Typography variant="body1">Subtotal:</Typography>
+                <Typography variant="body1">NZ$ {subtotal.toFixed(2)}</Typography>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+                <Typography variant="body1">Delivery Fee:</Typography>
+                <Typography variant="body1" color={deliveryFee > 0 ? "text.primary" : "success.main"}>
+                  {deliveryFee > 0 ? `NZ$ ${deliveryFee.toFixed(2)}` : "FREE"}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #eee", pt: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Total:</Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  NZ$ {totalPrice.toFixed(2)}
+                </Typography>
+              </Box>
+            </Box>
+
             {/* Payment Method */}
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+            <Typography variant="h6" sx={{ mb: 2, mt: 3, fontWeight: "bold" }}>
               Payment Method
             </Typography>
             
@@ -299,6 +320,9 @@ export default function CheckoutPage() {
               </Typography>
               <Typography variant="body2" sx={{ mb: 1 }}>
                 • Free delivery for orders over NZ$ 100
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                • NZ$ 10 delivery fee for orders under NZ$ 100
               </Typography>
               <Typography variant="body2">
                 • Please ensure someone is available to receive the order
