@@ -244,7 +244,7 @@ export default function CheckoutPage() {
             ))}
 
             {/* Price Breakdown */}
-            <Box sx={{ borderTop: "1px solid #eee", pt: 2 }}>
+            <Box>
               <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                 <Typography variant="body1">Subtotal:</Typography>
                 <Typography variant="body1">NZ$ {subtotal.toFixed(2)}</Typography>
