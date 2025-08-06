@@ -12,7 +12,7 @@ export const initialCakeValues = {
   ],
   UserId: "",
   IsPromoted: false,
-  IsAvailable: false,
+  IsAvailable: true,
 };
 
 export const cakeValidationSchema = Yup.object({
