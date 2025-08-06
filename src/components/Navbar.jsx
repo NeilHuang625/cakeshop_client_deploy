@@ -3,7 +3,6 @@ import { GiStairsCake } from "react-icons/gi";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import { RiShoppingCartLine } from "react-icons/ri";
 import { MdAccountCircle, MdOutlineAccountCircle } from "react-icons/md";
-import { CiSearch } from "react-icons/ci";
 import { NavLink, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import ResponsiveMenu from "./ResponsiveMenu";
@@ -175,9 +174,6 @@ const Navbar = () => {
 
         {/* Buttons */}
         <div className="col-span-1 hidden items-center justify-end gap-4 sm:flex">
-          <Button>
-            <CiSearch />
-          </Button>
           <Badge badgeContent={totalCartItems} color="error" overlap="circular">
             <Button onClick={toggleDrawer(true)} ref={cartIconRef}>
               <RiShoppingCartLine onClick={toggleDrawer(true)} />
