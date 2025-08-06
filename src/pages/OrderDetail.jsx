@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import CakeContext from "../contexts/CakeContext";
 import OrderContext from "../contexts/OrderProvider";
@@ -9,21 +9,11 @@ import { Chip } from "@mui/joy";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import { MdOutlinePending } from "react-icons/md";
-import AlertDialog from "../components/AlertDialog";
-import { AuthContext } from "../contexts/AuthProvider";
-import { deleteOrder } from "../services/apiOrder";
-import { useNavigate } from "react-router-dom";
 
 const OrderDetail = () => {
-  const [open, setOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const navigate = useNavigate();
-
   const { id } = useParams();
   const { cakes } = useContext(CakeContext);
-  const { orders, setOrders } = useContext(OrderContext);
-  const { jwt } = useContext(AuthContext);
+  const { orders } = useContext(OrderContext);
 
   const order = orders.find((o) => o.id === id);
 
@@ -34,19 +24,6 @@ const OrderDetail = () => {
       </Typography>
     );
   }
-
-  const handleOrderDelete = async () => {
-    const result = await deleteOrder(order.id, jwt);
-
-    if (result.success) {
-      setOrders(orders.filter((o) => o.id !== order.id));
-      setOpen(false);
-      navigate("/orders");
-    } else {
-      setErrorMessage(result.message);
-      setOpen(true);
-    }
-  };
 
   return (
     <div className="mx-auto my-8 max-w-5xl rounded-2xl bg-gray-100 p-4">
@@ -158,49 +135,6 @@ const OrderDetail = () => {
             <span className="text-amber-600">NZ${order.totalAmount}</span>
           </div>
         </div>
-      </div>
-      
-      <div className="mt-4 flex justify-end">
-        <button
-          onClick={() => {
-            setOpen(true);
-          }}
-          className="rounded-full border border-amber-500 bg-amber-600 px-6 py-2 text-sm font-semibold text-white shadow-lg duration-200 hover:cursor-pointer hover:border-gray-100 hover:bg-gray-200 hover:text-amber-600"
-        >
-          Cancel
-        </button>
-        {errorMessage ? (
-          <AlertDialog
-            type="warning"
-            open={open}
-            setOpen={setOpen}
-            title="Order has been confirmed"
-            message={errorMessage}
-            action={() => setOpen(false)}
-            actionName="Ok"
-          />
-        ) : order.orderStatus === "Confirmed" ||
-          order.orderStatus === "Completed" ? (
-          <AlertDialog
-            type="warning"
-            open={open}
-            setOpen={setOpen}
-            title="Order has been confirmed"
-            message="Your order has been confirmed or completed. Please contact our customer service for more details."
-            action={() => setOpen(false)}
-            actionName="Ok"
-          />
-        ) : (
-          <AlertDialog
-            type="cancel"
-            open={open}
-            setOpen={setOpen}
-            title="Cancel Order"
-            message="Are you sure you want to cancel this order?"
-            action={handleOrderDelete}
-            actionName="Yes"
-          />
-        )}
       </div>
     </div>
   );
