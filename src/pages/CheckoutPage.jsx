@@ -51,6 +51,11 @@ export default function CheckoutPage() {
     paymentMethod: "online",
   });
 
+  const [validationErrors, setValidationErrors] = useState({
+    deliveryDate: "",
+    deliveryTime: "",
+  });
+
   const [openPopup, setOpenPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -60,11 +65,65 @@ export default function CheckoutPage() {
     0,
   );
 
+  // Get minimum date (24 hours from now)
+  const getMinimumDate = () => {
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 1);
+    return minDate.toISOString().split('T')[0];
+  };
+
+  // Validate delivery date
+  const validateDeliveryDate = (date) => {
+    if (!date) return "Delivery date is required";
+    
+    const selectedDate = new Date(date);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 1);
+    minDate.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < minDate) {
+      return "Please select a date at least 24 hours from now";
+    }
+    
+    return "";
+  };
+
+  // Validate delivery time
+  const validateDeliveryTime = (time) => {
+    if (!time) return "Delivery time is required";
+    
+    const [hours, minutes] = time.split(':').map(Number);
+    const timeInMinutes = hours * 60 + minutes;
+    const minTime = 11 * 60; // 11:00 AM
+    const maxTime = 20 * 60; // 8:00 PM
+    
+    if (timeInMinutes < minTime || timeInMinutes > maxTime) {
+      return "Delivery time must be between 11:00 AM and 8:00 PM";
+    }
+    
+    return "";
+  };
+
   const handleInputChange = (field, value) => {
     setDeliveryInfo(prev => ({
       ...prev,
       [field]: value
     }));
+
+    // Real-time validation for date and time
+    if (field === 'deliveryDate') {
+      const error = validateDeliveryDate(value);
+      setValidationErrors(prev => ({
+        ...prev,
+        deliveryDate: error
+      }));
+    } else if (field === 'deliveryTime') {
+      const error = validateDeliveryTime(value);
+      setValidationErrors(prev => ({
+        ...prev,
+        deliveryTime: error
+      }));
+    }
   };
 
   // Get tomorrow's date as minimum date
@@ -76,10 +135,18 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     // Validate required fields
+    const dateError = validateDeliveryDate(deliveryInfo.deliveryDate);
+    const timeError = validateDeliveryTime(deliveryInfo.deliveryTime);
+    
+    setValidationErrors({
+      deliveryDate: dateError,
+      deliveryTime: timeError,
+    });
+
     if (!deliveryInfo.deliveryDate || !deliveryInfo.deliveryTime || 
         !deliveryInfo.address || !deliveryInfo.recipientName || 
-        !deliveryInfo.recipientPhone) {
-      setPopupMessage("Please fill in all required fields.");
+        !deliveryInfo.recipientPhone || dateError || timeError) {
+      setPopupMessage("Please fix all validation errors and fill in all required fields.");
       setOpenPopup(true);
       return;
     }
@@ -254,9 +321,11 @@ export default function CheckoutPage() {
                   label="Delivery Date *"
                   value={deliveryInfo.deliveryDate}
                   onChange={(e) => handleInputChange("deliveryDate", e.target.value)}
+                  error={!!validationErrors.deliveryDate}
+                  helperText={validationErrors.deliveryDate}
                   slotProps={{
                     inputLabel: { shrink: true },
-                    htmlInput: { min: getTomorrowDate() }
+                    htmlInput: { min: getMinimumDate() }
                   }}
                 />
               </Grid2>
@@ -267,8 +336,15 @@ export default function CheckoutPage() {
                   label="Delivery Time *"
                   value={deliveryInfo.deliveryTime}
                   onChange={(e) => handleInputChange("deliveryTime", e.target.value)}
+                  error={!!validationErrors.deliveryTime}
+                  helperText={validationErrors.deliveryTime || "Available: 11:00 AM - 8:00 PM"}
                   slotProps={{
-                    inputLabel: { shrink: true }
+                    inputLabel: { shrink: true },
+                    htmlInput: { 
+                      min: "11:00",
+                      max: "20:00",
+                      step: "900" // 15 minute intervals
+                    }
                   }}
                 />
               </Grid2>
