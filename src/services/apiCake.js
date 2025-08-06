@@ -101,3 +101,24 @@ export const getAllCakes = async (jwt) => {
     return { success: false, message: "Network error, please try again" };
   }
 };
+
+export const updateCakeAvailability = async (cakeId, available, jwt) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/cake/${cakeId}/availability`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`
+      },
+      body: JSON.stringify({ available })
+    });
+
+    if (response.ok) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Failed to update availability' };
+    }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};

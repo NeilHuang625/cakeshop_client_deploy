@@ -1,10 +1,10 @@
-import { Divider, IconButton } from "@mui/material";
+import { Divider, IconButton, Switch } from "@mui/material";
 import { useContext, useState } from "react";
 import CakeContext from "../contexts/CakeContext";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import AlertDialog from "../components/AlertDialog";
-import { deleteCake } from "../services/apiCake";
+import { deleteCake, updateCakeAvailability } from "../services/apiCake";
 import { AuthContext } from "../contexts/AuthProvider";
 
 const ManageCake = () => {
@@ -19,6 +19,19 @@ const ManageCake = () => {
   const handleDelete = (cakeId) => {
     setOpenDialog(true);
     setSelectedCakeId(cakeId);
+  };
+
+  const handleAvailabilityToggle = async (cakeId, currentAvailability) => {
+    const result = await updateCakeAvailability(cakeId, !currentAvailability, jwt);
+    if (result.success) {
+      setCakes((prev) => 
+        prev.map((cake) => 
+          cake.id === cakeId 
+            ? { ...cake, isAvailable: !currentAvailability }
+            : cake
+        )
+      );
+    }
   };
 
   const action = async () => {
@@ -65,6 +78,12 @@ const ManageCake = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <Switch
+                  checked={cake.isAvailable}
+                  onChange={() => handleAvailabilityToggle(cake.id, cake.isAvailable)}
+                  color="primary"
+                  size="small"
+                />
                 <IconButton
                   onClick={() => navigate(`/edit-cake/${cake.id}`)}
                   color="secondary"
