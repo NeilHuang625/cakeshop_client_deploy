@@ -126,13 +126,6 @@ export default function CheckoutPage() {
     }
   };
 
-  // Get tomorrow's date as minimum date
-  const getTomorrowDate = () => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split('T')[0];
-  };
-
   const handlePlaceOrder = async () => {
     // Validate required fields
     const dateError = validateDeliveryDate(deliveryInfo.deliveryDate);
